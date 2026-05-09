@@ -24,11 +24,11 @@ class SimpleHydratorTest extends TestCase
     public function testHydratesScalarProperties(): void
     {
         $dto = $this->hydrator->hydrate([
-            'name'   => 'Alice',
-            'count'  => 5,
-            'price'  => 9.99,
+            'name' => 'Alice',
+            'count' => 5,
+            'price' => 9.99,
             'active' => true,
-            'tags'   => ['a', 'b'],
+            'tags' => ['a', 'b'],
             'createdAt' => '2024-01-01 00:00:00',
         ], FlatDto::class);
 
@@ -43,11 +43,11 @@ class SimpleHydratorTest extends TestCase
     public function testConvertsSnakeCaseKeysToCamelCase(): void
     {
         $dto = $this->hydrator->hydrate([
-            'name'       => 'x',
-            'count'      => 1,
-            'price'      => 0.0,
-            'active'     => false,
-            'tags'       => [],
+            'name' => 'x',
+            'count' => 1,
+            'price' => 0.0,
+            'active' => false,
+            'tags' => [],
             'created_at' => '2024-06-01 12:00:00',
         ], FlatDto::class);
 
@@ -58,11 +58,11 @@ class SimpleHydratorTest extends TestCase
     public function testConvertsUpperCamelCaseKeyToLowerFirst(): void
     {
         $dto = $this->hydrator->hydrate([
-            'Name'   => 'Bob',
-            'count'  => 0,
-            'price'  => 0.0,
+            'Name' => 'Bob',
+            'count' => 0,
+            'price' => 0.0,
             'active' => false,
-            'tags'   => [],
+            'tags' => [],
             'createdAt' => '2024-01-01 00:00:00',
         ], FlatDto::class);
 
@@ -72,11 +72,11 @@ class SimpleHydratorTest extends TestCase
     public function testHydratesDateTimeInterfaceFromString(): void
     {
         $dto = $this->hydrator->hydrate([
-            'name'       => 'x',
-            'count'      => 1,
-            'price'      => 0.0,
-            'active'     => false,
-            'tags'       => [],
+            'name' => 'x',
+            'count' => 1,
+            'price' => 0.0,
+            'active' => false,
+            'tags' => [],
             'created_at' => '2023-03-15 08:30:00',
         ], FlatDto::class);
 
@@ -88,11 +88,11 @@ class SimpleHydratorTest extends TestCase
     public function testHydratesDateTimeInterfaceFromNullAsEpoch(): void
     {
         $dto = $this->hydrator->hydrate([
-            'name'       => 'x',
-            'count'      => 1,
-            'price'      => 0.0,
-            'active'     => false,
-            'tags'       => [],
+            'name' => 'x',
+            'count' => 1,
+            'price' => 0.0,
+            'active' => false,
+            'tags' => [],
             'created_at' => null,
         ], FlatDto::class);
 
@@ -103,11 +103,11 @@ class SimpleHydratorTest extends TestCase
     public function testNullableDateTimeAcceptsNull(): void
     {
         $dto = $this->hydrator->hydrate([
-            'name'       => 'x',
-            'count'      => 1,
-            'price'      => 0.0,
-            'active'     => false,
-            'tags'       => [],
+            'name' => 'x',
+            'count' => 1,
+            'price' => 0.0,
+            'active' => false,
+            'tags' => [],
             'created_at' => '2024-01-01 00:00:00',
             'deleted_at' => null,
         ], FlatDto::class);
@@ -118,11 +118,11 @@ class SimpleHydratorTest extends TestCase
     public function testHydratesArrayFromJsonString(): void
     {
         $dto = $this->hydrator->hydrate([
-            'name'       => 'x',
-            'count'      => 1,
-            'price'      => 0.0,
-            'active'     => false,
-            'tags'       => '["php","oop"]',
+            'name' => 'x',
+            'count' => 1,
+            'price' => 0.0,
+            'active' => false,
+            'tags' => '["php","oop"]',
             'created_at' => '2024-01-01 00:00:00',
         ], FlatDto::class);
 
@@ -132,11 +132,11 @@ class SimpleHydratorTest extends TestCase
     public function testHydratesArrayFromArray(): void
     {
         $dto = $this->hydrator->hydrate([
-            'name'       => 'x',
-            'count'      => 1,
-            'price'      => 0.0,
-            'active'     => false,
-            'tags'       => ['php', 'oop'],
+            'name' => 'x',
+            'count' => 1,
+            'price' => 0.0,
+            'active' => false,
+            'tags' => ['php', 'oop'],
             'created_at' => '2024-01-01 00:00:00',
         ], FlatDto::class);
 
@@ -146,7 +146,7 @@ class SimpleHydratorTest extends TestCase
     public function testHydratesNestedObject(): void
     {
         $dto = $this->hydrator->hydrate([
-            'title'   => 'HQ',
+            'title' => 'HQ',
             'address' => ['city' => 'Berlin', 'country' => 'DE'],
         ], NestedDto::class);
 
@@ -158,7 +158,7 @@ class SimpleHydratorTest extends TestCase
     public function testKeepsExistingValueWhenNullPassedForNonNullableProperty(): void
     {
         $dto = $this->hydrator->hydrate([
-            'status'  => null,
+            'status' => null,
             'retries' => null,
         ], NonNullableWithDefaultDto::class);
 
@@ -185,12 +185,12 @@ class SimpleHydratorTest extends TestCase
     public function testUnknownKeysInDataAreIgnored(): void
     {
         $dto = $this->hydrator->hydrate([
-            'name'          => 'x',
-            'count'         => 1,
-            'price'         => 0.0,
-            'active'        => false,
-            'tags'          => [],
-            'created_at'    => '2024-01-01 00:00:00',
+            'name' => 'x',
+            'count' => 1,
+            'price' => 0.0,
+            'active' => false,
+            'tags' => [],
+            'created_at' => '2024-01-01 00:00:00',
             'no_such_field' => 'should be ignored',
         ], FlatDto::class);
 
@@ -200,12 +200,12 @@ class SimpleHydratorTest extends TestCase
     public function testNullableStringAcceptsNull(): void
     {
         $dto = $this->hydrator->hydrate([
-            'name'        => 'x',
-            'count'       => 1,
-            'price'       => 0.0,
-            'active'      => false,
-            'tags'        => [],
-            'created_at'  => '2024-01-01 00:00:00',
+            'name' => 'x',
+            'count' => 1,
+            'price' => 0.0,
+            'active' => false,
+            'tags' => [],
+            'created_at' => '2024-01-01 00:00:00',
             'description' => null,
         ], FlatDto::class);
 
