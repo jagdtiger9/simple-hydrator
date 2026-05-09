@@ -43,6 +43,7 @@ class SimpleHydrator
             $property = self::camelCase($property);
             if (property_exists($dto, $property)) {
                 $value = match (true) {
+                    $value === null && $props[$property]['isNullable'] => null,
                     $props[$property]['type'] === DateTimeInterface::class => $value ?
                         new DateTimeImmutable($value) :
                         (new DateTimeImmutable())->setTimestamp(0),
