@@ -4,10 +4,14 @@ namespace Aljerom\SimpleHydrator\Tests;
 
 use Aljerom\SimpleHydrator\SimpleHydrator;
 use Aljerom\SimpleHydrator\Tests\Fixture\AddressDto;
+use Aljerom\SimpleHydrator\Tests\Fixture\DateDto;
 use Aljerom\SimpleHydrator\Tests\Fixture\FlatDto;
 use Aljerom\SimpleHydrator\Tests\Fixture\NestedDto;
 use Aljerom\SimpleHydrator\Tests\Fixture\NonNullableWithDefaultDto;
+use Aljerom\SimpleHydrator\Tests\Fixture\ObjectHolderDto;
 use Aljerom\SimpleHydrator\Tests\Fixture\PromotedDto;
+use Aljerom\SimpleHydrator\Tests\Fixture\PromotedReadonlyDto;
+use Aljerom\SimpleHydrator\Tests\Fixture\SetterDto;
 use DateTimeImmutable;
 use DateTimeInterface;
 use PHPUnit\Framework\TestCase;
@@ -210,5 +214,67 @@ class SimpleHydratorTest extends TestCase
         ], FlatDto::class);
 
         self::assertNull($dto->description);
+    }
+
+    public function testPromotedReadonlyPropertyDefaultsAreApplied(): void
+    {
+        $dto = $this->hydrator->hydrate([], PromotedReadonlyDto::class);
+
+        self::assertSame('default', $dto->name);
+        self::assertSame(1, $dto->page);
+    }
+
+    public function testPromotedReadonlyPropertyDefaultIsOverriddenByData(): void
+    {
+        $dto = $this->hydrator->hydrate(['name' => 'override', 'page' => 5], PromotedReadonlyDto::class);
+
+        self::assertSame('override', $dto->name);
+        self::assertSame(5, $dto->page);
+    }
+
+    public function testSetterIsInvokedForMatchingProperty(): void
+    {
+        $dto = $this->hydrator->hydrate(['title' => 'x', 'tags' => 'php,oop'], SetterDto::class);
+
+        self::assertSame('x', $dto->title);
+        self::assertSame(['php', 'oop'], $dto->tags);
+    }
+
+    public function testHydratesDateTimeSubclassFromString(): void
+    {
+        $dto = $this->hydrator->hydrate([
+            'createdAt' => '2024-05-01 10:00:00',
+            'updatedAt' => null,
+        ], DateDto::class);
+
+        self::assertInstanceOf(DateTimeImmutable::class, $dto->createdAt);
+        self::assertSame('2024-05-01', $dto->createdAt->format('Y-m-d'));
+        self::assertNull($dto->updatedAt);
+    }
+
+    public function testHydratesNonNullableDateTimeSubclassFromNullAsInitValue(): void
+    {
+        $dto = $this->hydrator->hydrate(['createdAt' => null], DateDto::class);
+
+        self::assertInstanceOf(DateTimeImmutable::class, $dto->createdAt);
+        self::assertSame('1970-01-01', $dto->createdAt->format('Y-m-d'));
+    }
+
+    public function testHydratesNestedObjectFromArray(): void
+    {
+        $dto = $this->hydrator->hydrate([
+            'address' => ['city' => 'Berlin', 'country' => 'DE'],
+        ], ObjectHolderDto::class);
+
+        self::assertInstanceOf(AddressDto::class, $dto->address);
+        self::assertSame('Berlin', $dto->address->city);
+    }
+
+    public function testPassesObjectInstanceThroughWithoutHydration(): void
+    {
+        $payload = new \stdClass();
+        $dto = $this->hydrator->hydrate(['payload' => $payload], ObjectHolderDto::class);
+
+        self::assertSame($payload, $dto->payload);
     }
 }
