@@ -1,7 +1,6 @@
 {
     "name": "aljerom/simple-hydrator",
     "description": "Reflection-based array-to-object hydrator with snake_case to camelCase mapping",
-    "version": "1.0.5",
     "type": "library",
     "license": "MIT",
     "require": {
